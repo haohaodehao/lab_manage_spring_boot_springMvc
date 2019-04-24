@@ -19,5 +19,5 @@ springboot 创建实验室设备检测系统
 点击Web, 然后打勾Web
 ![project dependencies](https://github.com/haohaodehao/lab_manage_spring_boot_springMvc/blob/create_project/images/1/maven-package1.PNG)
 然后点击Template Engines, 打勾Thymeleaf; 然后点击SQL, 打勾JPA和MySQL, 最后点击Next
-* 选择你想放的文件夹位置，然后Next
+* 选择你想放的文件夹位置，然后finish
 ![finish](https://github.com/haohaodehao/lab_manage_spring_boot_springMvc/blob/create_project/images/1/finish.PNG)
