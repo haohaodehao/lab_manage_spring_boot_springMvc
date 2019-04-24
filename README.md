@@ -7,3 +7,6 @@ springboot 创建实验室设备检测系统
 * 操作系统：windows10系统
 * JDK版本：jdk8
 * 编码工具：IntelliJ IDEA
+
+### IntelliJ IDEA创建项目
+点击Create New Project按钮
