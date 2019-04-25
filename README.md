@@ -435,3 +435,4 @@ spring.thymeleaf.cache=false
 spring.resources.static-locations=file:src/main/resources/static/
 spring.resources.cache.period=0
 ```
+src/resources/application.properties文件的改动需要重启项目以应用。
