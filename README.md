@@ -22,6 +22,16 @@ springboot 创建实验室设备检测系统
 * 选择你想放的文件夹位置，然后finish
 ![finish](images/1/finish.PNG)
 
+### 设置数据库
+在src/main/resources/application.properties文件中添加下面代码
+```
+spring.jpa.hibernate.ddl-auto=none
+spring.datasource.url=jdbc:mysql://localhost:3306/lab-manage-springboot?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=******
+```
+在mysql数据库中创建lab-manage-springboot数据库，把spring.datasource.password的值设置为mysql root用户的密码
+
 ### 添加网页模板
 
 * 首先选择模板
