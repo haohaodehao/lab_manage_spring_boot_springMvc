@@ -12,7 +12,7 @@ public class Equipment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     @NotBlank(message = "设备名称不能为空")
     private String name;
@@ -23,7 +23,7 @@ public class Equipment {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

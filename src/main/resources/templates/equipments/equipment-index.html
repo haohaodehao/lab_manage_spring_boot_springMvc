@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/admin_layout}">
+
+<head>
+    <title>index</title>
+    <meta name="description" content="index">
+</head>
+
+<body>
+<div layout:fragment="contents">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a href="" class="btn btn-info btn-circle btn-sm" title="添加设备"><i class="fa fa-plus"></i></a>
+            <h6 class="m-0 font-weight-bold text-primary" style="display: inline">设备列表</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="exec-js">
+    // Call the dataTables jQuery plugin
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            'ajax' : '/data/equipments',
+            'serverSide' : true,
+            columns : [
+                { data: 'id' },
+                { data: 'name' }
+                ],
+            language: {
+                url: '/dataTable-Chinese.json'
+            }
+        });
+    });
+</script>
+</body>
+</html>

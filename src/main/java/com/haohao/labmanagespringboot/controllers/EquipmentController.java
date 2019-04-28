@@ -16,6 +16,6 @@ public class EquipmentController {
 
     @GetMapping("/equipments")
     public String equipmentsIndex() {
-        return "equipment-index";
+        return "equipments/equipment-index";
     }
 }
