@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/admin_layout}">
+
+<head>
+    <title>index</title>
+    <meta name="description" content="index">
+</head>
+
+<body>
+<div layout:fragment="contents">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <a class="btn btn-info btn-sm" href="#">返回</a>
+            <h6 class="m-0 font-weight-bold text-primary" style="display: inline">添加设备</h6>
+        </div>
+        <div class="card-body">
+            <form action="#" th:action="@{/add-equipment-do}" th:object="${equipment}" method="post">
+                <div class="form-group">
+                    <label for="name">设备名称</label>
+                    <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="设备名称">
+                </div>
+
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
