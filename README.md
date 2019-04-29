@@ -717,7 +717,7 @@ public class EquipmentController {
 ```html
 <link  rel="stylesheet" th:href="@{/css/datatables.min.css}">
 ```
-* 在该文件中添加js文件
+* 在该文件中添加js文件4
 ```html
 <script type="text/javascript" th:src="@{/js/datatables.min.js}"></script>
 ```
@@ -725,4 +725,7 @@ public class EquipmentController {
 ```html
 <script layout:fragment="exec-js"></script>
 ```
+
+4、运行项目，打开http://localhost:8080/equipments，应该看到如下画面：
+![first_CURD_run_1](images/first_CURD_run1.PNG),如果你的跟我的不一样请对照[源码](https://github.com/haohaodehao/lab_manage_spring_boot_springMvc/tree/66fe712c7e7d45c833c7d00ce1a7428f97506ffe)
 
