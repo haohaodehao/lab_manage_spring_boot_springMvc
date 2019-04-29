@@ -32,7 +32,7 @@ spring.datasource.password=******
 ```
 在mysql数据库中创建lab-manage-springboot数据库，把spring.datasource.password的值设置为mysql root用户的密码
 
-### 添加网页模板
+## 添加网页模板
 
 * 首先选择模板
 
@@ -446,3 +446,283 @@ spring.resources.static-locations=file:src/main/resources/static/
 spring.resources.cache.period=0
 ```
 src/resources/application.properties文件的改动需要重启项目以应用。
+## 第一个‘增删改查’模块
+### 设备模型（表）设计
+1. 我们设计一个设备表，它只有两个表字段，ID和name。（不理解啥事表字段的读者，请自行google或者bing “sql数据库”）
+
+2. 在目录src/main/java/com/haohao/labmanagespringboot/下创建文件夹entities, 并在该文件夹下创建文件
+Equipment.java，并写入代码：
+```java
+package com.haohao.labmanagespringboot.entities;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+
+@Entity
+public class Equipment {
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @NotBlank(message = "设备名称不能为空")
+    private String name;
+
+    public Equipment() {}
+
+    public Equipment(String name) {
+        this.name = name;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Equipment{" + "id=" + id + ", name=" + name + '}';
+    }
+}
+```
+3、 在目录src/main/java/com/haohao/labmanagespringboot/下创建文件夹repositories, 并在该文件夹下创建文件
+  EquipmentRepository.java，并写入代码：
+```java
+package com.haohao.labmanagespringboot.repositories;
+
+import com.haohao.labmanagespringboot.entities.Equipment;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface EquipmentRepository extends CrudRepository<Equipment, Long> {
+    List<Equipment> findByName(String name);
+}
+```
+entity文件和repository文件对应着数据库操作，它们接收应用的数据库操作请求，然后把这些请求发送给数据库，
+最后接收数据库返回的结果、解析完结果再返回给应用。
+
+接着修改application.properties文件：
+```
+spring.jpa.hibernate.ddl-auto=update
+```
+* update 当程序启动的时候，自动检测entity文件来更新数据库中的表，把未创建的表自动创建。
+* none 选项表示再程序启动的时候，不操作数据库（不更新、不修改）。
+还有其他选项值，如果你感兴趣，请google或bing "springboot spring.jpa.hibernate.ddl-auto"
+
+然后启动项目，这是数据库中应该创建了表equipment,表中有id和name字段。还会创建一个hibernate_sequence表，这是
+springboot的工具库创建的。
+
+### 创建EquipmentController
+
+在目录src/main/java/com/haohao/labmanagespringboot/下创建文件夹controllers, 并在该文件夹下创建文件
+EquipmentController.java，并写入代码：
+```java
+package com.haohao.labmanagespringboot.controllers;
+
+import com.haohao.labmanagespringboot.repositories.EquipmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class EquipmentController {
+    private final EquipmentRepository equipmentRepository;
+
+    @Autowired
+    public EquipmentController(EquipmentRepository equipmentRepository) {
+        this.equipmentRepository = equipmentRepository;
+    }
+
+    @GetMapping("/equipments")
+    public String equipmentsIndex() {
+        return "equipment-index";
+    }
+}
+```
+在controller中我们创建了/equipments请求。
+
+### 创建equipment-index页面
+1、在目录src/main/resources/templates下创建文件equipment-index.html,并写入代码：
+```html
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/admin_layout}">
+
+<head>
+    <title>index</title>
+    <meta name="description" content="index">
+</head>
+
+<body>
+<div layout:fragment="contents">
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Age</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr>
+                        <td>Tiger Nixon</td>
+                        <td>System Architect</td>
+                        <td>Edinburgh</td>
+                        <td>61</td>
+                        <td>2011/04/25</td>
+                        <td>$320,800</td>
+                    </tr>
+                    <tr>
+                        <td>Garrett Winters</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>63</td>
+                        <td>2011/07/25</td>
+                        <td>$170,750</td>
+                    </tr>
+                    <tr>
+                        <td>Ashton Cox</td>
+                        <td>Junior Technical Author</td>
+                        <td>San Francisco</td>
+                        <td>66</td>
+                        <td>2009/01/12</td>
+                        <td>$86,000</td>
+                    </tr>
+                    <tr>
+                        <td>Cedric Kelly</td>
+                        <td>Senior Javascript Developer</td>
+                        <td>Edinburgh</td>
+                        <td>22</td>
+                        <td>2012/03/29</td>
+                        <td>$433,060</td>
+                    </tr>
+                    <tr>
+                        <td>Airi Satou</td>
+                        <td>Accountant</td>
+                        <td>Tokyo</td>
+                        <td>33</td>
+                        <td>2008/11/28</td>
+                        <td>$162,700</td>
+                    </tr>
+                    <tr>
+                        <td>Brielle Williamson</td>
+                        <td>Integration Specialist</td>
+                        <td>New York</td>
+                        <td>61</td>
+                        <td>2012/12/02</td>
+                        <td>$372,000</td>
+                    </tr>
+                    <tr>
+                        <td>Herrod Chandler</td>
+                        <td>Sales Assistant</td>
+                        <td>San Francisco</td>
+                        <td>59</td>
+                        <td>2012/08/06</td>
+                        <td>$137,500</td>
+                    </tr>
+                    <tr>
+                        <td>Rhona Davidson</td>
+                        <td>Integration Specialist</td>
+                        <td>Tokyo</td>
+                        <td>55</td>
+                        <td>2010/10/14</td>
+                        <td>$327,900</td>
+                    </tr>
+                    <tr>
+                        <td>Colleen Hurst</td>
+                        <td>Javascript Developer</td>
+                        <td>San Francisco</td>
+                        <td>39</td>
+                        <td>2009/09/15</td>
+                        <td>$205,500</td>
+                    </tr>
+                    <tr>
+                        <td>Sonya Frost</td>
+                        <td>Software Engineer</td>
+                        <td>Edinburgh</td>
+                        <td>23</td>
+                        <td>2008/12/13</td>
+                        <td>$103,600</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script layout:fragment="exec-js">
+    // Call the dataTables jQuery plugin
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            language: {
+                url: '/dataTable-Chinese.json'
+            }
+        });
+    });
+</script>
+</body>
+</html>
+```
+在这个页面，我们用到了jquery datatable前端js表格库，这是一个超级省劲的库，它给你创建了很多好用的功能。
+我选的模板SB Admin 2使用了这个库，所以咱们也用它。（我推荐读者自行google或bing “datatable中文”了解下它）
+
+2、把datatable的库文件(请到[源码](https://github.com/haohaodehao/lab_manage_spring_boot_springMvc/tree/66fe712c7e7d45c833c7d00ce1a7428f97506ffe)得到这些文件)添加到项目
+* datatables.min.js 到 src/mian/resources/static/js
+* datatables.min.css 到 src/main/resources/static/css
+* dataTable-Chinese.json 到 src/main/resources/static
+
+3、最后我们添加datatable 的js、css文件到admin_layout布局文件以供程序使用
+* 在该文件中添加css文件
+```html
+<link  rel="stylesheet" th:href="@{/css/datatables.min.css}">
+```
+* 在该文件中添加js文件
+```html
+<script type="text/javascript" th:src="@{/js/datatables.min.js}"></script>
+```
+并在该文件中添加这行代码：
+```html
+<script layout:fragment="exec-js"></script>
+```
+
